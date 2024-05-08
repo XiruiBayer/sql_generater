@@ -30,13 +30,40 @@ def deal(df, filename):
     # 将full_sql显示在textEdit中
     return full_sql
 
+# @st.cache_data
+# def convert_df(df):
+#     # IMPORTANT: Cache the conversion to prevent computation on every rerun
+#     return df.to_csv().encode("utf-8")
 
 def main():
     st.set_page_config(layout="wide")
-    st.title("SQL Generator")
+    st.title("SQL INSERT Generator")
+    # url = 'pages/example_1.csv'
+    # df = pd.read_csv(url)
+    # csv = convert_df(df)
+    # st.download_button(
+    #     label="Download Example Data",
+    #     data=csv,
+    #     file_name="example_1.csv",
+    #     mime="text/csv",
+    # )
+    # 指定你想要提供下载的Excel文件名
+    csv_filename = "pages/example_1.csv"
+
+    try:
+        with open(csv_filename, "rb") as file:
+            csv_bytes = file.read()
+
+        st.download_button(
+            label="Download Example Data",
+            data=csv_bytes,
+            file_name=csv_filename,
+            mime="text/csv"
+        )
+    except FileNotFoundError:
+        st.error(f"文件 {csv_filename} 未找到，请确保文件存在于应用程序的当前目录。")
     uploaded_file = st.file_uploader("Choose CSV", type=['csv'])
     if uploaded_file is not None:
-        # Can be used wherever a "file-like" object is accepted:
         df = pd.read_csv(uploaded_file, header=None)
         st.divider()
         st.write(df)
