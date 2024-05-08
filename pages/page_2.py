@@ -1,6 +1,6 @@
 import streamlit as st
 import pandas as pd
-from pathlib import Path
+import requests
 
 
 def deal(bytes_data):
@@ -14,8 +14,6 @@ def deal(bytes_data):
         col = ''
         for i in df.itertuples():
             col = col + i[1] + ' ' + i[2] + ','
-            # print(i[1])  # 字段名称
-            # print(i[2])  # 字段类型
         col = col[:-1]
         sql_create = f'CREATE TABLE {sql_tabel_name.columns.tolist()[0]} ({col});'
         # print(sql_create)
@@ -23,21 +21,34 @@ def deal(bytes_data):
     return sql_list
 
 
+
+
 def main():
     st.set_page_config(layout="wide")
-    st.title("SQL Generator")
-    uploaded_file = st.file_uploader("Choose CSV", type=['xlsx'])
+    st.title("SQL CREATE Generator")
+    excel_filename = "pages/example_2.xlsx"
+
+    try:
+        with open(excel_filename, "rb") as file:
+            excel_bytes = file.read()
+
+        st.download_button(
+            label="Download Example Data",
+            data=excel_bytes,
+            file_name=excel_filename,
+            mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+        )
+    except FileNotFoundError:
+        st.error(f"文件 {excel_filename} 未找到，请确保文件存在于应用程序的当前目录。")
+    uploaded_file = st.file_uploader("Choose xlsx", type=['xlsx'])
     if uploaded_file is not None:
-        # Can be used wherever a "file-like" object is accepted:
-        # df = pd.read_csv(uploaded_file, header=None)
         bytes_data = uploaded_file.getvalue()
-        # st.divider()
-        # st.write(df)
         filename = uploaded_file.name
         st.divider()
         sql_list = deal(bytes_data)
         for i in sql_list:
             st.text(i)
+
 
 if __name__ == '__main__':
     main()
