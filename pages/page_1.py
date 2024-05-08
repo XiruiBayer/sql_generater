@@ -45,6 +45,5 @@ def main():
         st.divider()
         st.text(sql)
 
-
-if __name__ == "__main__":
+if __name__ == '__main__':
     main()
