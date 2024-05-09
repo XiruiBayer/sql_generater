@@ -1,4 +1,5 @@
 import streamlit as st
+from annotated_text import annotated_text
 import pandas as pd
 from pathlib import Path
 
@@ -22,31 +23,27 @@ def deal(df, filename):
         # 将每行数据的SQL片段加入到总SQL中
         sql_rows.append(tuple(sql_row))
 
+    # print(sql_rows)
+    header_row = sql_rows[0]
+    body_rows = sql_rows[1:]
     # 构造完整的SQL语句
-    sql_header = '(' + ', '.join(['{}'] * len(df.iloc[0])) + ')'
-    sql_body = ',\n'.join([sql_header.format(*row) for row in sql_rows[1:]])
-    full_sql = f"INSERT INTO {Path(filename).stem}\n ({', '.join(sql_rows[0])})\nVALUES\n{sql_body};"
+    full_sql = f"""INSERT INTO {Path(filename).stem} \n({(', '.join(header_row)).replace("'", "")}) VALUES\n"""
     # print(full_sql)
-    # 将full_sql显示在textEdit中
-    return full_sql
+    sql_body = ''
+    for body in body_rows:
+        sql_body += f"""({",".join(body)}),\n"""
+    sql_body = sql_body.rstrip(",\n") + ";"
+    # print(full_sql + sql_body)
+    return full_sql + sql_body
 
-# @st.cache_data
-# def convert_df(df):
-#     # IMPORTANT: Cache the conversion to prevent computation on every rerun
-#     return df.to_csv().encode("utf-8")
 
 def main():
     st.set_page_config(layout="wide")
     st.title("SQL INSERT Generator")
-    # url = 'pages/example_1.csv'
-    # df = pd.read_csv(url)
-    # csv = convert_df(df)
-    # st.download_button(
-    #     label="Download Example Data",
-    #     data=csv,
-    #     file_name="example_1.csv",
-    #     mime="text/csv",
-    # )
+    annotated_text(
+        ("README", ""),
+        "    The name of the incoming CSV file will be recognized as the table name.",
+    )
     # 指定你想要提供下载的Excel文件名
     csv_filename = "pages/example_1.csv"
 
@@ -71,6 +68,7 @@ def main():
         sql = deal(df, filename)
         st.divider()
         st.text(sql)
+
 
 if __name__ == '__main__':
     main()
