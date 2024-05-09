@@ -1,6 +1,7 @@
 import streamlit as st
 import pandas as pd
-import requests
+from annotated_text import annotated_text
+
 
 
 def deal(bytes_data):
@@ -26,6 +27,10 @@ def deal(bytes_data):
 def main():
     st.set_page_config(layout="wide")
     st.title("SQL CREATE Generator")
+    annotated_text(
+        ("README", ""),
+        "    Support generating SQL statements simultaneously from multiple sheets inputted.",
+    )
     excel_filename = "pages/example_2.xlsx"
 
     try:
