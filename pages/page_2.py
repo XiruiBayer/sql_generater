@@ -51,8 +51,8 @@ def main():
         filename = uploaded_file.name
         st.divider()
         sql_list = deal(bytes_data)
-        for i in sql_list:
-            st.text(i)
+        for sql in sql_list:
+            st.code(sql, language='sql')
 
 
 if __name__ == '__main__':

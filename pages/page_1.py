@@ -33,7 +33,6 @@ def deal(df, filename):
     for body in body_rows:
         sql_body += f"""({",".join(body)}),\n"""
     sql_body = sql_body.rstrip(",\n") + ";"
-    # print(full_sql + sql_body)
     return full_sql + sql_body
 
 
@@ -67,7 +66,7 @@ def main():
         filename = uploaded_file.name
         sql = deal(df, filename)
         st.divider()
-        st.text(sql)
+        st.code(sql, language='sql')
 
 
 if __name__ == '__main__':
