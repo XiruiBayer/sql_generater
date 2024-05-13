@@ -1,0 +1,1 @@
+https://sqlgenerater-bayerext.streamlit.app/

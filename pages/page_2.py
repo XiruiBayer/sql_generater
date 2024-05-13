@@ -1,8 +1,11 @@
 import streamlit as st
 import pandas as pd
 from annotated_text import annotated_text
+import pyperclip
 
-
+def copy_to_clipboard(text):
+    pyperclip.copy(text)
+    st.success("Copy Success!")
 
 def deal(bytes_data):
     xls = pd.ExcelFile(bytes_data)
@@ -14,9 +17,10 @@ def deal(bytes_data):
         df = pd.read_excel(bytes_data, sheet_name=sheet, header=1)
         col = ''
         for i in df.itertuples():
-            col = col + i[1] + ' ' + i[2] + ','
+            col = f"{col}{i[1]} {i[2]},\n"
+            # col = col + i[1] + ' ' + i[2] + ',\n'
         col = col[:-1]
-        sql_create = f'CREATE TABLE {sql_tabel_name.columns.tolist()[0]} ({col});'
+        sql_create = f'CREATE TABLE {sql_tabel_name.columns.tolist()[0]} \n({col});'
         # print(sql_create)
         sql_list.append(sql_create)
     return sql_list
@@ -31,7 +35,7 @@ def main():
         ("README", ""),
         "    Support generating SQL statements simultaneously from multiple sheets inputted.",
     )
-    excel_filename = "pages/example_2.xlsx"
+    excel_filename = "static/example_2.xlsx"
 
     try:
         with open(excel_filename, "rb") as file:
@@ -51,8 +55,12 @@ def main():
         filename = uploaded_file.name
         st.divider()
         sql_list = deal(bytes_data)
+        all_sql = '\n'.join(sql_list)
+        if st.button('Copy all SQL'):
+            copy_to_clipboard(all_sql)
         for sql in sql_list:
             st.code(sql, language='sql')
+
 
 
 if __name__ == '__main__':
