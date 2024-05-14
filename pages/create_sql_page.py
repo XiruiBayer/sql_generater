@@ -1,5 +1,5 @@
-from utils import *
-from sql_generator import *
+from utils.utils import *
+from utils.sql_generator import *
 
 
 def main():

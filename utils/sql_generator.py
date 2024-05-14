@@ -1,5 +1,7 @@
 import pandas as pd
 import streamlit as st
+from sql_builder import escape_string
+from uuid import uuid4
 
 
 class SqlGenerator:
@@ -23,7 +25,7 @@ class SqlGenerator:
         tabs = st.tabs(self.table_content.keys())
         for i, tab in enumerate(tabs):
             edited_df = tab.data_editor(list(self.table_content.values())[i], hide_index=False,
-                                        use_container_width=True)
+                                        use_container_width=True, key=uuid4())
             sql = self.df2sql_insert(edited_df, list(self.table_content.keys())[i])
             tab.code(sql)
             insert_sql += f"{sql}\n\n"
@@ -40,8 +42,7 @@ class SqlGenerator:
                 if pd.isna(value):
                     sql_value = "NULL"
                 elif isinstance(value, str):
-                    value = value.replace("''", "'")
-                    value = value.replace("'", "''")
+                    value = escape_string(value)
                     sql_value = f"'{value}'"
                 else:
                     sql_value = str(value)
@@ -55,7 +56,7 @@ class SqlGenerator:
         tabs = st.tabs(self.table_content.keys())
         for i, tab in enumerate(tabs):
             edited_df = tab.data_editor(list(self.table_content.values())[i], hide_index=False,
-                                        use_container_width=True)
+                                        use_container_width=True, key=uuid4())
 
             sql = self.df2sql_create(edited_df, list(self.table_content.keys())[i])
             tab.code(sql)
@@ -73,5 +74,4 @@ class SqlGenerator:
 
 
 if __name__ == '__main__':
-    s = SqlGenerator('static/example_1.xlsx')
-    print(s.get_insert_sql())
+    print(uuid4())
