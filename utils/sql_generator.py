@@ -1,6 +1,6 @@
 import pandas as pd
 import streamlit as st
-from sql_builder import escape_string
+from utils.sql_builder import escape_string
 from uuid import uuid4
 
 
