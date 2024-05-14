@@ -39,7 +39,6 @@ class SqlGenerator:
         for index, row in data_df.iterrows():
             sql_row = []
             for value in row:
-                print(value)
                 if pd.isna(value):
                     sql_value = "NULL"
                 elif isinstance(value, str) or isinstance(value, pd.Timestamp):
@@ -47,7 +46,6 @@ class SqlGenerator:
                     value = escape_string(value)
                     sql_value = f"'{value}'"
                 else:
-                    print(type(value))
                     sql_value = str(value)
                 sql_row.append(sql_value)
             sql = f"{sql}\n({','.join(sql_row)}),"
