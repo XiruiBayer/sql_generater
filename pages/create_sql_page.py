@@ -2,22 +2,6 @@ from utils import *
 from sql_generator import *
 
 
-def deal(bytes_data):
-    xls = pd.ExcelFile(bytes_data)
-    sheet_names = xls.sheet_names
-    sql_list = []
-    for sheet in sheet_names:
-        sql_tabel_name = pd.read_excel(bytes_data, sheet_name=sheet, nrows=0)
-        df = pd.read_excel(bytes_data, sheet_name=sheet, header=1)
-        col = ''
-        for i in df.itertuples():
-            col = f"{col}{i[1]} {i[2]},\n"
-        col = col[:-1]
-        sql_create = f'CREATE TABLE {sql_tabel_name.columns.tolist()[0]} \n({col});'
-        sql_list.append(sql_create)
-    return sql_list
-
-
 def main():
     st.set_page_config(layout="wide")
     st.title("SQL CREATE Generator")
@@ -33,7 +17,11 @@ def main():
         bytes_data = uploaded_file.getvalue()
         sql_generator = SqlGenerator(bytes_data)
         st.text('')
+        st.info(f"In this block, preview and make real-time modifications to the Dataframe and SQL queries.")
         sql_generator.show_create_sql()
+        if "SQL" in st.session_state:
+            with st.expander("In this block, preview and copy all SQL statements."):
+                st.code(st.session_state.SQL)
 
 
 if __name__ == '__main__':

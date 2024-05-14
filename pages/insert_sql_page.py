@@ -16,11 +16,11 @@ def main():
         bytes_data = uploaded_file.getvalue()
         sql_generator = SqlGenerator(bytes_data)
         st.text('')
-        st.info(f"Modify and preview your SQLs")
+        st.info(f"In this block, preview and make real-time modifications to the Dataframe and SQL queries.")
         sql_generator.show_insert_sql()
         if "SQL" in st.session_state:
-            st.success("All SQLs Ready")
-            with st.expander("Expand to Copy All"):
+            # st.success("All SQLs Ready")
+            with st.expander("In this block, preview and copy all SQL statements."):
                 st.code(st.session_state.SQL)
 
 
