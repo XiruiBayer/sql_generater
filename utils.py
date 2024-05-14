@@ -1,6 +1,5 @@
 from pathlib import Path
 import streamlit as st
-import pyperclip
 
 
 def download_button(fine_path: Path, file_type: str) -> None:
@@ -20,9 +19,4 @@ def download_button(fine_path: Path, file_type: str) -> None:
     except FileNotFoundError:
         st.error(f"file: {fine_path}.No such file or directory.")
 
-
-def copy_sql_action():
-    if "SQL" in st.session_state:
-        pyperclip.copy(st.session_state.SQL)
-        st.success("Copy Success!")
 
