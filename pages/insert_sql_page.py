@@ -1,7 +1,5 @@
 from utils import *
 from sql_generator import *
-from functools import partial
-
 
 def main():
     st.set_page_config(layout="wide")
@@ -17,9 +15,12 @@ def main():
         bytes_data = uploaded_file.getvalue()
         sql_generator = SqlGenerator(bytes_data)
         st.text('')
-        if st.button(":sparkles: COPY ALL SQL :sparkles:", on_click=partial(copy_sql_action)):
-            st.success("Copy Success!")
+        st.info(f"Modify and preview your SQLs")
         sql_generator.show_insert_sql()
+        if "SQL" in st.session_state:
+            st.success("All SQLs Ready")
+            with st.expander("Expand to Copy All"):
+                st.code(st.session_state.SQL)
 
 
 if __name__ == '__main__':

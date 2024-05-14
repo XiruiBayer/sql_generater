@@ -14,7 +14,7 @@ def download_button(fine_path: Path, file_type: str) -> None:
         st.download_button(
             label="Download Example Data",
             data=excel_bytes,
-            file_name=fine_path.stem,
+            file_name=fine_path.name,
             mime=mime_type
         )
     except FileNotFoundError:
@@ -24,3 +24,5 @@ def download_button(fine_path: Path, file_type: str) -> None:
 def copy_sql_action():
     if "SQL" in st.session_state:
         pyperclip.copy(st.session_state.SQL)
+        st.success("Copy Success!")
+

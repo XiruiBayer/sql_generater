@@ -2,7 +2,10 @@ from annotated_text import annotated_text
 from utils import *
 from sql_generator import *
 from functools import partial
+import os
+from urllib.parse import quote
 
+os.environ['STREAMLIT_SERVER_ENABLE_STATIC_SERVING']='true'
 
 def deal(bytes_data):
     xls = pd.ExcelFile(bytes_data)
@@ -30,13 +33,14 @@ def main():
     """)
     download_button(Path("static/example_2.xlsx"), 'xlsx')
     uploaded_file = st.file_uploader("Choose xlsx", type=['xlsx'])
+
+
     if uploaded_file is not None:
         bytes_data = uploaded_file.getvalue()
         sql_generator = SqlGenerator(bytes_data)
         st.text('')
-        if st.button(":sparkles: COPY ALL SQL :sparkles:", on_click=partial(copy_sql_action)):
-            st.success("Copy Success!")
         sql_generator.show_create_sql()
+
 
 
 if __name__ == '__main__':

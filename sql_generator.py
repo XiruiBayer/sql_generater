@@ -18,45 +18,71 @@ class SqlGenerator:
             table_content[sql_tabel_name] = df
         return table_content
 
-    def show_insert_sql(self):
+    def show_insert_sql(self) -> None:
         insert_sql = ''
-        for table_name, df in self.table_content.items():
-            st.divider()
-            # deal header
-            df = st.data_editor(df,hide_index=True,use_container_width=True)
-            table_columns = df.columns
-            sql = f"INSERT INTO {table_name}\n({','.join(table_columns)}) VALUES"
-            # deal body
-            for index, row in df.iterrows():
-                sql_row = []
-                for value in row:
-                    if pd.isna(value):
-                        sql_value = "NULL"
-                    elif isinstance(value, str):
-                        value = value.replace("''", "'")
-                        value = value.replace("'", "''")
-                        sql_value = f"'{value}'"
-                    else:
-                        sql_value = str(value)
-                    sql_row.append(sql_value)
-                sql = f"{sql}\n({','.join(sql_row)})"
-            st.code(sql)
-            insert_sql += sql
+        tabs = st.tabs(self.table_content.keys())
+        for i, tab in enumerate(tabs):
+            edited_df = tab.data_editor(list(self.table_content.values())[i], hide_index=False,
+                                        use_container_width=True)
+            sql = self.df2sql_insert(edited_df, list(self.table_content.keys())[i])
+            tab.code(sql)
+            insert_sql += f"{sql}\n\n"
         st.session_state.SQL = insert_sql
+
+    @staticmethod
+    def df2sql_insert(data_df, table_name):
+        table_columns = data_df.columns
+        sql = f"INSERT INTO {table_name}\n({','.join(table_columns)}) VALUES"
+        # deal body
+        for index, row in data_df.iterrows():
+            sql_row = []
+            for value in row:
+                if pd.isna(value):
+                    sql_value = "NULL"
+                elif isinstance(value, str):
+                    value = value.replace("''", "'")
+                    value = value.replace("'", "''")
+                    sql_value = f"'{value}'"
+                else:
+                    sql_value = str(value)
+                sql_row.append(sql_value)
+            sql = f"{sql}\n({','.join(sql_row)}),"
+        sql = f"{sql[:-1]};"
+        return sql
 
     def show_create_sql(self):
         create_sql = ''
         for table_name, df in self.table_content.items():
             st.divider()
-            df = st.data_editor(df,hide_index=True,use_container_width=True)
+            df = st.data_editor(df, hide_index=True, use_container_width=True)
             col = ''
             for i in df.itertuples():
                 col = f"{col}{i[1]} {i[2]},\n"
             col = col[:-2]
             sql = f'CREATE TABLE {table_name} \n({col});'
             st.code(sql)
-            create_sql += "{sql}\n"
+            create_sql += f"{sql}\n"
         st.session_state.SQL = create_sql
+
+    @staticmethod
+    def df2sql_create(data_df, table_name):
+        table_columns = data_df.columns
+        sql = f"INSERT INTO {table_name}\n({','.join(table_columns)}) VALUES"
+        # deal body
+        for index, row in data_df.iterrows():
+            sql_row = []
+            for value in row:
+                if pd.isna(value):
+                    sql_value = "NULL"
+                elif isinstance(value, str):
+                    value = value.replace("''", "'")
+                    value = value.replace("'", "''")
+                    sql_value = f"'{value}'"
+                else:
+                    sql_value = str(value)
+                sql_row.append(sql_value)
+            sql = f"{sql}\n({','.join(sql_row)})"
+        return sql
 
 
 if __name__ == '__main__':
