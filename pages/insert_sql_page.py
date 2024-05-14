@@ -20,7 +20,7 @@ def main():
         sql_generator.show_insert_sql()
         if "SQL" in st.session_state:
             # st.success("All SQLs Ready")
-            with st.expander("In this block, preview and copy all SQL statements."):
+            with st.expander(":point_down: In this block, preview and copy all SQL statements. :point_down: "):
                 st.code(st.session_state.SQL)
 
 

@@ -20,7 +20,7 @@ def main():
         st.info(f"In this block, preview and make real-time modifications to the Dataframe and SQL queries.")
         sql_generator.show_create_sql()
         if "SQL" in st.session_state:
-            with st.expander("In this block, preview and copy all SQL statements."):
+            with st.expander(":point_down: In this block, preview and copy all SQL statements. :point_down:"):
                 st.code(st.session_state.SQL)
 
 
