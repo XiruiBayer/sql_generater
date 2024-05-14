@@ -24,7 +24,7 @@ class SqlGenerator:
         insert_sql = ''
         tabs = st.tabs(self.table_content.keys())
         for i, tab in enumerate(tabs):
-            edited_df = tab.data_editor(list(self.table_content.values())[i], hide_index=False,
+            edited_df = tab.data_editor(list(self.table_content.values())[i], hide_index=True,
                                         use_container_width=True, key=uuid4())
             sql = self.df2sql_insert(edited_df, list(self.table_content.keys())[i])
             tab.code(sql)
@@ -39,12 +39,15 @@ class SqlGenerator:
         for index, row in data_df.iterrows():
             sql_row = []
             for value in row:
+                print(value)
                 if pd.isna(value):
                     sql_value = "NULL"
-                elif isinstance(value, str):
+                elif isinstance(value, str) or isinstance(value, pd.Timestamp):
+                    value = f"{value}"
                     value = escape_string(value)
                     sql_value = f"'{value}'"
                 else:
+                    print(type(value))
                     sql_value = str(value)
                 sql_row.append(sql_value)
             sql = f"{sql}\n({','.join(sql_row)}),"
@@ -55,7 +58,7 @@ class SqlGenerator:
         create_sql = ''
         tabs = st.tabs(self.table_content.keys())
         for i, tab in enumerate(tabs):
-            edited_df = tab.data_editor(list(self.table_content.values())[i], hide_index=False,
+            edited_df = tab.data_editor(list(self.table_content.values())[i], hide_index=True,
                                         use_container_width=True, key=uuid4())
 
             sql = self.df2sql_create(edited_df, list(self.table_content.keys())[i])
