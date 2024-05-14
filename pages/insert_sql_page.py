@@ -1,6 +1,7 @@
 from utils import *
 from sql_generator import *
 
+
 def main():
     st.set_page_config(layout="wide")
     st.title("SQL INSERT Generator")
