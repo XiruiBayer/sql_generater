@@ -15,7 +15,9 @@ class SqlGenerator:
         table_content = {}
         for sheet in sheet_names:
             sql_tabel_name = pd.read_excel(self.file, sheet_name=sheet, nrows=0).columns.tolist()[0]
-            df = pd.read_excel(self.file, sheet_name=sheet, header=1)
+            converters = {col: str for col in
+                          pd.read_excel(self.file, sheet_name=sheet, header=1, nrows=1).columns.tolist()}
+            df = pd.read_excel(self.file, sheet_name=sheet, header=1, converters=converters)
             df.index = df.index + 1
             table_content[sql_tabel_name] = df
         return table_content
@@ -41,8 +43,10 @@ class SqlGenerator:
             for value in row:
                 if pd.isna(value):
                     sql_value = "NULL"
-                elif isinstance(value, str) or isinstance(value, pd.Timestamp):
-                    value = f"{value}"
+                elif isinstance(value, str):
+                    if value.endswith(" 00:00:00"):
+                        value = value[:-9]
+                        print(value)
                     value = escape_string(value)
                     sql_value = f"'{value}'"
                 else:
