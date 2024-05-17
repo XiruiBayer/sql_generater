@@ -11,7 +11,10 @@ def main():
         + Modifying the data displayed in the DataFrame results in real-time updates to the underlying SQL.
     """)
     download_button(Path("static/example_2.xlsx"), 'xlsx')
+    st.header('Upload File', divider='rainbow')
+
     uploaded_file = st.file_uploader("Choose xlsx", type=['xlsx'])
+    st.header('Show Result', divider='rainbow')
 
     if uploaded_file is not None:
         bytes_data = uploaded_file.getvalue()
@@ -25,5 +28,5 @@ def main():
 
 
 if __name__ == '__main__':
-    ...
+    main()
 

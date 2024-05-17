@@ -11,16 +11,14 @@ def main():
         + Modifying the data displayed in the DataFrame results in real-time updates to the underlying SQL.
     """)
     download_button(Path("static/example_1.xlsx"), 'xlsx')
-    col1, col2, col3 = st.columns(3)
-    with col1:
-        st.session_state.text_input_1 = st.text_input('additional key', value="", placeholder="insert_user")
-    with col2:
-        st.session_state.text_input_2 = st.text_input('additional value', value="", placeholder="xirui")
-    with col3:
-        st.session_state.text_input_3 = st.toggle("Force", value=False)
-        if st.session_state.text_input_3:
-            st.write("Ignore existing data and forcibly replace it with additional data!")
+    # 获取用户输入
+    st.header('Add Global Columns', divider='rainbow')
+    st.session_state.num_input = st.number_input("Add Quality", min_value=1, max_value=12, value=1)
+    # 根据用户输入动态显示列
+    multi_columns(st.session_state.num_input)
+    st.header('Upload File', divider='rainbow')
     uploaded_file = st.file_uploader("Choose xlsx", type=['xlsx'])
+    st.header('Show Result', divider='rainbow')
     if uploaded_file is not None:
         bytes_data = uploaded_file.getvalue()
         sql_generator = SqlGenerator(bytes_data)
