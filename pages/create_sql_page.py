@@ -1,9 +1,15 @@
-from utils.utils import *
-from utils.sql_generator import *
+import streamlit as st
+
+# st.set_page_config(initial_sidebar_state="collapsed", layout="wide")
+
+from tools.utils import download_button, Login
+from pathlib import Path
+from tools.sql_generator import SqlGenerator
 
 
-def main():
-    st.set_page_config(layout="wide")
+def show_create():
+    Login.check_login()
+    Login.log_out_button()
     st.title("SQL CREATE Generator")
     st.markdown("""
         #####  README:
@@ -28,5 +34,4 @@ def main():
 
 
 if __name__ == '__main__':
-    main()
-
+    show_create()

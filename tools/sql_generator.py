@@ -1,6 +1,6 @@
 import pandas as pd
 import streamlit as st
-from utils.sql_builder import escape_string
+from tools.sql_builder import escape_string
 from uuid import uuid4
 from copy import deepcopy
 from io import BytesIO

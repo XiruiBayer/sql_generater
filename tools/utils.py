@@ -1,5 +1,8 @@
 from pathlib import Path
 import streamlit as st
+from tools.cookie_tools import cookie_manager
+from streamlit_navigation_bar import st_navbar
+import pages as pg
 
 
 def download_button(fine_path: Path, file_type: str) -> None:
@@ -31,7 +34,8 @@ def multi_columns(num_cols):
         # 在当前行的columns中添加内容
         actual_index = row * 3
         with col1:
-            user_input = st.text_input(':rainbow[add key]', value="", placeholder="insert_user", key=str(actual_index + 1))
+            user_input = st.text_input(':rainbow[add key]', value="", placeholder="insert_user",
+                                       key=str(actual_index + 1))
             # 检查输入是否重复
             if user_input in seen_values:
                 st.session_state.not_process.append(row)
@@ -40,15 +44,13 @@ def multi_columns(num_cols):
                 seen_values.add(user_input)  # 如果值不重复，则添加到集合中
                 st.session_state[f'text_input_{row}_1'] = user_input
         with col2:
-            st.session_state[f'text_input_{row}_2'] = st.text_input(':rainbow[add value]', value="", placeholder="xirui",
+            st.session_state[f'text_input_{row}_2'] = st.text_input(':rainbow[add value]', value="",
+                                                                    placeholder="xirui",
                                                                     key=str(actual_index + 2))
         with col3:
             st.session_state[f'text_input_{row}_3'] = st.toggle("Force", value=False, key=str(actual_index + 3))
             if st.session_state[f'text_input_{row}_3']:
                 st.write("Ignore existing data and forcibly replace it with additional value!")
-
-
-
 
 
 def multi_column_bak(num_cols):
@@ -69,3 +71,28 @@ def multi_column_bak(num_cols):
             else:
                 # 如果实际索引超出用户输入的列数，可以不添加任何内容或显示占位符
                 pass
+
+
+class Login:
+    LOGIN_PAGE = 'pages/login.py'
+
+    @staticmethod
+    def log_out() -> None:
+        try:
+            cookie_manager.delete_cookie("sql_generator_user")
+        except Exception as e:
+            pass
+        finally:
+            st.rerun()  # 重新运行应用
+
+    @staticmethod
+    def log_out_button() -> None:
+        col1, col2 = st.columns([0.9, 0.2])
+        if col2.button("Logout", type="primary"):
+            Login.log_out()  # 调用 log_out 方法
+
+    @classmethod
+    def check_login(cls) -> None:
+        if not cookie_manager.get_cookie("sql_generator_user"):
+        # if not st.session_state.get("sql_generator_user", None):
+            st.switch_page(cls.LOGIN_PAGE)

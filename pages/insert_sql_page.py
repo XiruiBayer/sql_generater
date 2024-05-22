@@ -1,9 +1,14 @@
-from utils.utils import *
-from utils.sql_generator import *
+import streamlit as st
+# st.set_page_config(initial_sidebar_state="collapsed", layout="wide")
+
+from tools.sql_generator import SqlGenerator
+from tools.utils import download_button, multi_columns, Login
+from pathlib import Path
 
 
-def main():
-    st.set_page_config(layout="wide")
+def show_insert():
+    Login.check_login()
+    Login.log_out_button()
     st.title("SQL INSERT Generator")
     st.markdown("""
         #####  README:
@@ -32,4 +37,4 @@ def main():
 
 
 if __name__ == '__main__':
-    main()
+    show_insert()
